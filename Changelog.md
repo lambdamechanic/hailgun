@@ -1,3 +1,7 @@
+## 0.5.1
+
+- Minor cleanups (see commit 1bb4746eaf3fbc100b9003da771eb4198a8a198a)
+
 ## 0.5.0
 
 - [PR #26](https://bitbucket.org/echo_rm/hailgun/pull-requests/26/) Support named emails
