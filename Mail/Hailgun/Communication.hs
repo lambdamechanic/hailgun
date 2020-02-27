@@ -13,7 +13,9 @@ import           Control.Monad.IO.Class                (MonadIO (..))
 import           Data.Aeson
 import qualified Data.ByteString.Char8                 as BC
 import qualified Data.ByteString.Lazy.Char8            as BLC
+#if __GLASGOW_HASKELL__ < 806
 import           Data.Foldable                         (foldMap)
+#endif
 import           Data.Monoid
 import           Mail.Hailgun.Errors
 import           Mail.Hailgun.Internal.Data
@@ -28,7 +30,11 @@ toQueryParams = fmap (second Just)
 
 getRequest :: (MonadThrow m) => String -> HailgunContext -> [(BC.ByteString, Maybe BC.ByteString)] -> m NC.Request
 getRequest url context queryParams = do
+#if MIN_VERSION_http_client(0,5,0)
+   initRequest <- NC.parseUrlThrow url
+#else
    initRequest <- NC.parseUrl url
+#endif
    let request = appEndo (applyHailgunAuth context) $
          initRequest
             { NC.method = NM.methodGet
@@ -41,7 +47,11 @@ getRequest url context queryParams = do
 
 postRequest :: (MonadThrow m, MonadIO m) => String -> HailgunContext -> [Part] -> m NC.Request
 postRequest url context parts = do
+#if MIN_VERSION_http_client(0,5,0)
+   initRequest <- NC.parseUrlThrow url
+#else
    initRequest <- NC.parseUrl url
+#endif
    let request = initRequest
          { NC.method = NM.methodPost
 #if MIN_VERSION_http_client(0,5,0)
@@ -77,5 +87,8 @@ parseResponse response = statusToResponse . NT.statusCode . NC.responseStatus $ 
 responseDecode :: (FromJSON a) => NC.Response BLC.ByteString -> Either HailgunErrorResponse a
 responseDecode = mapError . eitherDecode . NC.responseBody
 
+#if MIN_VERSION_http_client(0,5,0)
+#else
 ignoreStatus :: a -> b -> c -> Maybe d
 ignoreStatus _ _ _ = Nothing
+#endif

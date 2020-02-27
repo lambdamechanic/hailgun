@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module Mail.Hailgun.Errors
     ( HailgunErrorResponse(..) -- TODO Make it so that herMessage is a hidden detail in the next version
     , toHailgunError
@@ -7,7 +8,9 @@ module Mail.Hailgun.Errors
     , mapError
     ) where
 
+#if __GLASGOW_HASKELL__ < 800
 import           Control.Applicative
+#endif
 import           Control.Monad       (mzero)
 import           Data.Aeson
 import qualified Data.Text           as T

@@ -1,9 +1,12 @@
+{-# LANGUAGE CPP #-}
 module Mail.Hailgun.SendEmail
     ( sendEmail
     , HailgunSendResponse(..)
     ) where
 
+#if __GLASGOW_HASKELL__ < 800
 import           Control.Applicative
+#endif
 import           Control.Monad                         (mzero)
 import           Data.Aeson
 import qualified Data.ByteString.Char8                 as BC
@@ -14,11 +17,9 @@ import           Mail.Hailgun.Errors
 import           Mail.Hailgun.Internal.Data
 import           Mail.Hailgun.MailgunApi
 import           Mail.Hailgun.PartUtil
-import           Network.HTTP.Client                   (httpLbs, withManager)
+import qualified Network.HTTP.Client                   as NC
 import qualified Network.HTTP.Client.MultipartFormData as NCM
 import           Network.HTTP.Client.TLS               (tlsManagerSettings)
-import           Text.Email.Validate                   (EmailAddress,
-                                                        toByteString)
 
 -- | Send an email using the Mailgun API's. This method is capable of sending a message over the
 -- Mailgun service. All it needs is the appropriate context.
@@ -28,7 +29,12 @@ sendEmail
    -> IO (Either HailgunErrorResponse HailgunSendResponse) -- ^ The result of the sent email. Either a sent email or a successful send.
 sendEmail context message = do
    request <- postRequest url context (toEmailParts message)
-   response <- withManager tlsManagerSettings (httpLbs request)
+#if MIN_VERSION_http_client(0,5,0)
+   mgr <- NC.newManager tlsManagerSettings
+   response <- NC.httpLbs request mgr
+#else
+   response <- NC.withManager tlsManagerSettings (NC.httpLbs request)
+#endif
    return $ parseResponse response
    where
       url = mailgunApiPrefixContext context ++ "/messages"

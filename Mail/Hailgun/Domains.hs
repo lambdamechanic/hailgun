@@ -1,10 +1,13 @@
+{-# LANGUAGE CPP #-}
 module Mail.Hailgun.Domains
     ( getDomains
     , HailgunDomainResponse(..)
     , HailgunDomain(..)
     ) where
 
+#if __GLASGOW_HASKELL__ < 800
 import           Control.Applicative
+#endif
 import           Control.Monad              (mzero)
 import           Data.Aeson
 import qualified Data.Text                  as T
@@ -13,7 +16,7 @@ import           Mail.Hailgun.Errors
 import           Mail.Hailgun.Internal.Data
 import           Mail.Hailgun.MailgunApi
 import           Mail.Hailgun.Pagination
-import           Network.HTTP.Client        (httpLbs, withManager)
+import qualified Network.HTTP.Client        as NC
 import           Network.HTTP.Client.TLS    (tlsManagerSettings)
 
 -- | Make a request to Mailgun for the domains against your account. This is a paginated request so you must specify
@@ -24,7 +27,12 @@ getDomains
    -> IO (Either HailgunErrorResponse HailgunDomainResponse) -- ^ The IO response which is either an error or the list of domains.
 getDomains context page = do
    request <- getRequest url context (toQueryParams . pageToParams $ page)
-   response <- withManager tlsManagerSettings (httpLbs request)
+#if MIN_VERSION_http_client(0,5,0)
+   mgr <- NC.newManager tlsManagerSettings
+   response <- NC.httpLbs request mgr
+#else
+   response <- NC.withManager tlsManagerSettings (NC.httpLbs request)
+#endif
    return $ parseResponse response
    where
       url = mailgunApiPrefix ++ "/domains"

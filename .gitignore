@@ -7,7 +7,7 @@
 /cabal.sandbox.config
 /dist
 /.stack-work
-stack.yaml.lock
+stack*.yaml.lock
 
 # Config File
 /hailgun.send.conf
