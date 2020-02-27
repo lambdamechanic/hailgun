@@ -27,11 +27,11 @@ license:             MIT
 license-file:        LICENSE
 
 -- The package author(s).
-author:              Robert Massaioli
+author:              Robert Massaioli <robertmassaioli@gmail.com>
 
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
-maintainer:          robertmassaioli@gmail.com
+maintainer:          Konstantine Rybnikov <k-bx@k-bx.com>
 
 -- A copyright notice.
 copyright:           (c) 2014-2018 Robert Massaioli
