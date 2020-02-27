@@ -84,6 +84,8 @@ library
                         , tagsoup            >= 0.13 && < 0.15
                         , text               == 1.2.*
                         , transformers       >= 0.3 && < 0.6
+                        , filepath           >= 1 && < 2
+                        , attoparsec         >= 0.13 && < 0.14
 
    if flag(newtime)
       Build-Depends:    time >= 1.5
