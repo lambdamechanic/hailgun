@@ -22,6 +22,9 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text            as T
 import           Data.Time.Clock      (UTCTime (..))
 import           Data.Time.Format     (ParseTime (..), parseTime)
+#if MIN_VERSION_time(1,9,0)
+import           Data.Time.Format.Internal (ParseTime (..))
+#endif
 import           Data.Time.LocalTime  (zonedTimeToUTC)
 import qualified Network.HTTP.Client  as NHC
 import qualified Text.Email.Validate  as TEV

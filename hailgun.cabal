@@ -10,7 +10,7 @@ name:                hailgun
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             0.4.2
+version:             0.4.3
 
 -- A short (one-line) description of the package.
 synopsis:            Mailgun REST api interface for Haskell.
@@ -78,7 +78,7 @@ library
                         , email-validate     >= 2.0 && < 2.4
                         , exceptions         >= 0.8
                         , filepath           >= 1 && < 2
-                        , http-client        >= 0.4 && < 0.6
+                        , http-client        >= 0.4 && < 0.7
                         , http-client-tls    >= 0.2 && < 0.4
                         , http-types         >= 0.8
                         , tagsoup            >= 0.13 && < 0.15
