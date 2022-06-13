@@ -10,6 +10,7 @@ import           Control.Applicative
 #endif
 import           Control.Monad              (mzero)
 import           Data.Aeson
+import qualified Data.Aeson.Key as Key
 import qualified Data.Text                  as T
 import           Mail.Hailgun.Communication
 import           Mail.Hailgun.Errors
@@ -45,8 +46,9 @@ data HailgunDomainResponse = HailgunDomainResponse
 
 instance FromJSON HailgunDomainResponse where
    parseJSON (Object v) = HailgunDomainResponse
-      <$> v .: T.pack "total_count"
-      <*> v .: T.pack "items"
+      <$> v .: key "total_count"
+      <*> v .: key "items"
+      where key = Key.fromText . T.pack
    parseJSON _ = mzero
 
 data HailgunDomain = HailgunDomain
@@ -61,10 +63,11 @@ data HailgunDomain = HailgunDomain
 
 instance FromJSON HailgunDomain where
    parseJSON (Object v) = HailgunDomain
-      <$> v .: T.pack "name"
-      <*> v .: T.pack "smtp_login"
-      <*> v .: T.pack "smtp_password"
-      <*> v .: T.pack "created_at"
-      <*> v .: T.pack "wildcard"
-      <*> v .: T.pack "spam_action"
+      <$> v .: key "name"
+      <*> v .: key "smtp_login"
+      <*> v .: key "smtp_password"
+      <*> v .: key "created_at"
+      <*> v .: key "wildcard"
+      <*> v .: key "spam_action"
+      where key = Key.fromText . T.pack
    parseJSON _ = mzero
