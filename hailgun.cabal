@@ -82,8 +82,8 @@ library
                         , http-client-tls    >= 0.2 && < 0.4
                         , http-types         >= 0.8
                         , tagsoup            >= 0.13 && < 0.15
-                        , text               == 1.2.*
-                        , transformers       >= 0.3 && < 0.6
+                        , text               >= 1.2
+                        , transformers       >= 0.3 
                         , filepath           >= 1 && < 2
                         , attoparsec         >= 0.13 && < 0.15
 
